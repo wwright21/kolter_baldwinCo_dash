@@ -124,11 +124,14 @@ fig.update_layout(
 line_color = '#FF6F61'
 fig.update_traces(
     hovertemplate=dash_variable_dict[dash_variable][2],
-    mode='lines',
+    mode='lines+markers',
     line=dict(
         color=line_color,
-        width=4,
+        width=3,
         dash='solid'
+    ),
+    marker=dict(
+        size=8
     )
 )
 
