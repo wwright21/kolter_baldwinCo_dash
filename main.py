@@ -218,7 +218,7 @@ for col, (metro, migration_total) in zip([col1, col2, col3, col4, col5], metro_r
             """,
             unsafe_allow_html=True)
 
-# finally, just show the whole source data
+# finally, show the whole source data
 st.write('---')
 st.write("")
 st.markdown(
@@ -226,7 +226,6 @@ st.markdown(
     <div style='margin-top: -30px; margin-bottom: 20px; text-align: left'>
         <span style='font-size: 16px; font-weight: 200; color: #36454F;'>
             Migration source data from the IRS Statistics of Income shown in table below. Each row represents the flow of people, adjusted gross income (AGI), and AGI per capita into and out of Baldwin County, Alabama from another county for the given year. 
-            <br/><br/>Columns ending in "inflow" represent people, AGI, or AGI per capita flowing <i>into</i> Baldwin County for that year from the other county listed in the row. Conversely, columns ending in "outflow" represent the flow <i>out of</i> Baldwin County to the other county listed for the given year.
             <br/><br/>Click on any of the column headers to sort the data ascending and then descending. A third click on the column header will remove the sort. Finally, hover over the table to reveal control buttons in the top-right corner of the table to download a copy of the data to CSV, search within the table, or expand the table to fullscreen.
         </span>
     </div>
@@ -238,25 +237,41 @@ df_display['year'] = df_display['year'].astype(str)
 df_display = df_display.drop(
     columns=['migration_type', 'primary_FIPS', 'aux_FIPS'])
 df_display = df_display.rename(columns={
+    'year': 'Year',
     'aux_county': 'County',
     'aux_state': 'State',
     'aux_GeoRollup': 'Metro Area',
-    'agi_capita_inflow': 'agi_PerCapita_inflow',
-    'agi_capita_outflow': 'agi_PerCapita_outflow'
+    'agi_capita_inflow': 'AGI Per Capita into Baldwin County',
+    'agi_capita_outflow': 'AGI Per Capita leaving Baldwin County',
+    'agi_inflow': 'AGI into Baldwin County',
+    'agi_outflow': 'AGI leaving Baldwin County',
+    'people_inflow': 'Persons into Baldwin County',
+    'people_outflow': 'Persons leaving Baldwin County'
 })
 df_display = df_display[[
-    'year',
+    'Year',
     'County',
     'State',
     'Metro Area',
-    'agi_inflow',
-    'people_inflow',
-    'agi_PerCapita_inflow',
-    'agi_outflow',
-    'people_outflow',
-    'agi_PerCapita_outflow'
+    'AGI into Baldwin County',
+    'Persons into Baldwin County',
+    'AGI Per Capita into Baldwin County',
+    'AGI leaving Baldwin County',
+    'Persons leaving Baldwin County',
+    'AGI Per Capita leaving Baldwin County'
 ]]
-st.dataframe(df_display)
+
+# Format the "GDP" column as currency
+formatted_df = df_display.style.format({
+    "AGI Per Capita into Baldwin County": "${:,.0f}",
+    "AGI Per Capita leaving Baldwin County": "${:,.0f}",
+    "AGI into Baldwin County": "${:,.0f}",
+    "AGI leaving Baldwin County": "${:,.0f}",
+    "Persons into Baldwin County": "{:,.0f}",
+    "Persons leaving Baldwin County": "{:,.0f}",
+})
+
+st.dataframe(formatted_df)
 
 st.write("")
 st.write("")
