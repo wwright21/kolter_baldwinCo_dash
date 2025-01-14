@@ -10,6 +10,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"  # 'collapsed' or 'expanded'
 )
 
+# whole page variables
+county_var = "Baldwin"
+state_var = "Alabama"
+stateAbbrev_var = "AL"
+
 # set the dashboard title
 title_font_size = 30
 title_margin_top = 0
@@ -20,7 +25,7 @@ st.markdown(
     f"""
     <div style='margin-top: {title_margin_top}px; margin-bottom: {title_margin_bottom}px;'>
         <span style='font-size: {title_font_size}px; font-weight: 700; color: #36454F;'>
-            Baldwin County (AL) Migration Explorer
+            {county_var} County ({stateAbbrev_var}) Migration Explorer
         </span>
     </div>
     """,
@@ -76,7 +81,7 @@ fig = px.line(
     line_chart_data,
     x='year',
     y=dash_variable_dict[dash_variable][0],
-    title=f'Net Migration of {dash_variable} into Baldwin County Since 2016',
+    title=f'Net Migration of {dash_variable} into {county_var} County Since 2016',
     height=440,
 )
 
@@ -184,7 +189,7 @@ st.markdown(
     f""" 
     <div style='margin-top: 0px; margin-bottom: 10px; text-align: center'>
         <span style='font-size: 16px; font-weight: 200; color: #36454F;'>
-            Metro Areas (and Cumulative Total) Sending <br/>the Most {dash_variable} Into Baldwin County Since 2016: 
+            Metro Areas (and Cumulative Total) Sending <br/>the Most {dash_variable} Into {county_var} County Since 2016: 
         </span>
     </div>
     """,
@@ -222,10 +227,17 @@ for col, (metro, migration_total) in zip([col1, col2, col3, col4, col5], metro_r
 st.write('---')
 st.write("")
 st.markdown(
-    """
+    f"""
     <div style='margin-top: -30px; margin-bottom: 20px; text-align: left'>
         <span style='font-size: 16px; font-weight: 200; color: #36454F;'>
-            Migration source data from the IRS Statistics of Income shown in table below. Each row represents the flow of people, adjusted gross income (AGI), and AGI per capita into and out of Baldwin County, Alabama from another county for the given year. 
+            See below table for migration source data from the 
+            <a href="https://www.irs.gov/statistics/soi-tax-stats-migration-data" 
+               target="_blank" 
+               style="color: #FF6F61; 
+               text-decoration: none;">
+               <b>IRS Statistics of Income.</b>
+            </a>
+            Each row represents the flow of people, adjusted gross income (AGI), and AGI per capita into and out of {county_var} County, {state_var} relative to the other county for the given year. 
             <br/><br/>Click on any of the column headers to sort the data ascending and then descending. A third click on the column header will remove the sort. Finally, hover over the table to reveal control buttons in the top-right corner of the table to download a copy of the data to CSV, search within the table, or expand the table to fullscreen.
         </span>
     </div>
@@ -241,34 +253,34 @@ df_display = df_display.rename(columns={
     'aux_county': 'County',
     'aux_state': 'State',
     'aux_GeoRollup': 'Metro Area',
-    'agi_capita_inflow': 'AGI Per Capita into Baldwin County',
-    'agi_capita_outflow': 'AGI Per Capita leaving Baldwin County',
-    'agi_inflow': 'AGI into Baldwin County',
-    'agi_outflow': 'AGI leaving Baldwin County',
-    'people_inflow': 'Persons into Baldwin County',
-    'people_outflow': 'Persons leaving Baldwin County'
+    'agi_capita_inflow': f'AGI Per Capita into {county_var} County',
+    'agi_capita_outflow': f'AGI Per Capita leaving {county_var} County',
+    'agi_inflow': f'AGI into {county_var} County',
+    'agi_outflow': f'AGI leaving {county_var} County',
+    'people_inflow': f'Persons into {county_var} County',
+    'people_outflow': f'Persons leaving {county_var} County'
 })
 df_display = df_display[[
     'Year',
     'County',
     'State',
     'Metro Area',
-    'AGI into Baldwin County',
-    'Persons into Baldwin County',
-    'AGI Per Capita into Baldwin County',
-    'AGI leaving Baldwin County',
-    'Persons leaving Baldwin County',
-    'AGI Per Capita leaving Baldwin County'
+    f'AGI into {county_var} County',
+    f'Persons into {county_var} County',
+    f'AGI Per Capita into {county_var} County',
+    f'AGI leaving {county_var} County',
+    f'Persons leaving {county_var} County',
+    f'AGI Per Capita leaving {county_var} County'
 ]]
 
 # Format the "GDP" column as currency
 formatted_df = df_display.style.format({
-    "AGI Per Capita into Baldwin County": "${:,.0f}",
-    "AGI Per Capita leaving Baldwin County": "${:,.0f}",
-    "AGI into Baldwin County": "${:,.0f}",
-    "AGI leaving Baldwin County": "${:,.0f}",
-    "Persons into Baldwin County": "{:,.0f}",
-    "Persons leaving Baldwin County": "{:,.0f}",
+    f"AGI Per Capita into {county_var} County": "${:,.0f}",
+    f"AGI Per Capita leaving {county_var} County": "${:,.0f}",
+    f"AGI into {county_var} County": "${:,.0f}",
+    f"AGI leaving {county_var} County": "${:,.0f}",
+    f"Persons into {county_var} County": "{:,.0f}",
+    f"Persons leaving {county_var} County": "{:,.0f}",
 })
 
 st.dataframe(formatted_df)
@@ -279,7 +291,7 @@ st.write("")
 col1, col2 = st.columns([4, 1])
 col1.markdown(
     f"""
-    For questions about the source data or this dashboard, please contact Will Wright by clicking <a href="mailto:williamcwrightjr@gmail.com?subject=Question about Baldwin Migration Dashboard" style="text-decoration: none; color: #FF6F61;"><b>here</b>.</a> 
+    For questions about this data explorer or the source data, please contact Will Wright by clicking <a href="mailto:williamcwrightjr@gmail.com?subject=Question about Baldwin Migration Dashboard" style="text-decoration: none; color: #FF6F61;"><b>here</b>.</a> 
     """,
     unsafe_allow_html=True)
 col2.image('Assets/kolter2.png', width=100)
