@@ -25,7 +25,7 @@ st.markdown(
     f"""
     <div style='margin-top: {title_margin_top}px; margin-bottom: {title_margin_bottom}px;'>
         <span style='font-size: {title_font_size}px; font-weight: 700; color: #36454F;'>
-            {county_var} County ({stateAbbrev_var}) Migration Explorer
+            {county_var} County ({stateAbbrev_var}) Migration Dashboard
         </span>
     </div>
     """,
